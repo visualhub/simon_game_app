@@ -8,6 +8,7 @@ class SimonGameController extends GetxController {
   final isPlaying = false.obs;
   final sequenceColor = ''.obs;
   final isColorPressEnabled = false.obs;
+  DifficultyMode difficultyMode = DifficultyMode.medium;
 
   void startGame() {
     sequence.clear();
@@ -24,7 +25,7 @@ class SimonGameController extends GetxController {
       'red',
       'blue',
       'green',
-      'yellow',
+      'amber',
       'pink',
       'orange',
       'purple',
@@ -36,17 +37,43 @@ class SimonGameController extends GetxController {
   }
 
   Future<void> playSequence() async {
+    print(difficultyMode);
     isColorPressEnabled.value = false;
-    await Future.delayed(const Duration(milliseconds: 500));
+    await Future.delayed(
+      Duration(
+        milliseconds: difficultyModeCheck(difficultyMode),
+      ),
+    );
     for (String color in sequence) {
       sequenceColor.value = color;
-      await Future.delayed(const Duration(milliseconds: 500));
+      await Future.delayed(
+        Duration(
+          milliseconds: difficultyModeCheck(difficultyMode),
+        ),
+      );
       sequenceColor.value = "";
-      await Future.delayed(const Duration(milliseconds: 500));
+      await Future.delayed(
+        Duration(
+          milliseconds: difficultyModeCheck(difficultyMode),
+        ),
+      );
       debugPrint('$sequence');
       update();
     }
     isColorPressEnabled.value = true;
+  }
+
+  int difficultyModeCheck(DifficultyMode mode) {
+    return switch (mode) {
+      DifficultyMode.easy => 750,
+      DifficultyMode.hard => 150,
+      _ => 500,
+    };
+  }
+
+  void setDifficultyMode(DifficultyMode mode) {
+    difficultyMode = mode;
+    print(difficultyMode);
   }
 
   void onColorPressed(String color) {
@@ -80,4 +107,10 @@ class SimonGameController extends GetxController {
       'Your score: ${score.value}',
     );
   }
+}
+
+enum DifficultyMode {
+  easy,
+  medium,
+  hard,
 }

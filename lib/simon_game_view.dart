@@ -28,43 +28,33 @@ class SimonGame extends GetView<SimonGameController> {
   }
 
   Color _getHighlightedColor(String color) {
-    return color == 'red'
-        ? Colors.redAccent.withOpacity(0.6)
-        : color == 'blue'
-            ? Colors.blueAccent.withOpacity(0.6)
-            : color == 'green'
-                ? Colors.greenAccent.withOpacity(0.6)
-                : color == 'yellow'
-                    ? Colors.amberAccent.withOpacity(0.6)
-                    : color == 'pink'
-                        ? Colors.pinkAccent.withOpacity(0.6)
-                        : color == 'orange'
-                            ? Colors.orangeAccent.withOpacity(0.6)
-                            : color == 'teal'
-                                ? Colors.tealAccent.withOpacity(0.6)
-                                : color == 'indigo'
-                                    ? Colors.indigoAccent.withOpacity(0.6)
-                                    : Colors.purpleAccent.withOpacity(0.6);
+    return switch (color) {
+      'red' => Colors.redAccent.withOpacity(0.6),
+      'blue' => Colors.blueAccent.withOpacity(0.6),
+      'pink' => Colors.pinkAccent.withOpacity(0.6),
+      'teal' => Colors.tealAccent.withOpacity(0.6),
+      'green' => Colors.greenAccent.withOpacity(0.6),
+      'amber' => Colors.amberAccent.withOpacity(0.6),
+      'indigo' => Colors.indigoAccent.withOpacity(0.6),
+      'purple' => Colors.purpleAccent.withOpacity(0.6),
+      'orange' => Colors.orangeAccent.withOpacity(0.6),
+      _ => Colors.white.withOpacity(0.6),
+    };
   }
 
   Color _getDefaultColor(String color) {
-    return color == 'red'
-        ? Colors.red
-        : color == 'blue'
-            ? Colors.blue
-            : color == 'green'
-                ? Colors.green
-                : color == 'yellow'
-                    ? Colors.amber
-                    : color == 'pink'
-                        ? Colors.pink
-                        : color == 'orange'
-                            ? Colors.orange
-                            : color == 'teal'
-                                ? Colors.teal
-                                : color == 'indigo'
-                                    ? Colors.indigo
-                                    : Colors.purple;
+    return switch (color) {
+      'red' => Colors.red,
+      'blue' => Colors.blue,
+      'pink' => Colors.pink,
+      'teal' => Colors.teal,
+      'green' => Colors.green,
+      'amber' => Colors.amber,
+      'indigo' => Colors.indigo,
+      'purple' => Colors.purple,
+      'orange' => Colors.orange,
+      _ => Colors.white,
+    };
   }
 
   List<BoxShadow> _getButtonBoxShadow(String color) {
@@ -88,53 +78,150 @@ class SimonGame extends GetView<SimonGameController> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Simon Game'),
+        actions: [
+          Obx(
+            () => IconButton(
+              onPressed: !controller.isPlaying.value
+                  ? () {
+                      _bottomSheet(context);
+                    }
+                  : null,
+              icon: const Icon(Icons.settings),
+            ),
+          )
+        ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Obx(
-              () => Text(
+      body: Container(
+        alignment: Alignment.center,
+        color: Colors.black12,
+        child: Obx(
+          () => Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'Mode: ${controller.difficultyMode.name}',
+                style: const TextStyle(fontSize: 12),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                'Best you have Done : ${controller.score}',
+                style: const TextStyle(fontSize: 20),
+              ),
+              const SizedBox(height: 20),
+              Text(
                 'Score: ${controller.score}',
                 style: const TextStyle(fontSize: 20),
               ),
-            ),
-            const SizedBox(height: 20),
-            Obx(
-              () => ElevatedButton(
-                onPressed:
-                    controller.isPlaying.value ? null : controller.startGame,
-                child: const Text('Start Game'),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  buildColorButton('red'),
+                  buildColorButton('blue'),
+                  buildColorButton('green'),
+                ],
               ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  buildColorButton('amber'),
+                  buildColorButton('pink'),
+                  buildColorButton('orange'),
+                ],
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  buildColorButton('teal'),
+                  buildColorButton('indigo'),
+                  buildColorButton('purple'),
+                ],
+              ),
+              const SizedBox(height: 20),
+              Obx(
+                () => ElevatedButton(
+                  onPressed:
+                      controller.isPlaying.value ? null : controller.startGame,
+                  child: const Text('Start Game'),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<dynamic> _bottomSheet(BuildContext context) {
+    return showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
             ),
-            const SizedBox(height: 20),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                buildColorButton('red'),
-                buildColorButton('blue'),
-                buildColorButton('green'),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                buildColorButton('yellow'),
-                buildColorButton('pink'),
-                buildColorButton('orange'),
-              ],
-            ),
-            const SizedBox(height: 10),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                buildColorButton('teal'),
-                buildColorButton('indigo'),
-                buildColorButton('purple'),
-              ],
-            ),
-          ],
+            color: Colors.white,
+          ),
+          alignment: Alignment.center,
+          padding: const EdgeInsets.all(20),
+          height: Get.height * 0.4,
+          width: Get.width,
+          child: Column(
+            children: [
+              const Text(
+                'Difficulty Levels',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              _customButton(
+                buttonText: 'Easy',
+                onPressed: () {
+                  controller.setDifficultyMode(DifficultyMode.easy);
+                },
+              ),
+              const Divider(),
+              _customButton(
+                buttonText: 'Medium',
+                onPressed: () {
+                  controller.setDifficultyMode(DifficultyMode.medium);
+                },
+              ),
+              const Divider(),
+              _customButton(
+                buttonText: 'Hard',
+                onPressed: () {
+                  controller.setDifficultyMode(DifficultyMode.hard);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  CupertinoButton _customButton({
+    required String buttonText,
+    required VoidCallback onPressed,
+  }) {
+    return CupertinoButton(
+      color: Colors.black.withOpacity(0.1),
+      onPressed: onPressed,
+      child: Container(
+        alignment: Alignment.center,
+        width: Get.width,
+        child: Text(
+          buttonText,
+          style: const TextStyle(color: Colors.black),
         ),
       ),
     );
