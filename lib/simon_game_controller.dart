@@ -2,13 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class SimonGameController extends GetxController {
-  final sequence = <String>[].obs;
-  final userSequence = <String>[].obs;
-  final score = 0.obs;
-  final isPlaying = false.obs;
-  final sequenceColor = ''.obs;
-  final isColorPressEnabled = false.obs;
-  DifficultyMode difficultyMode = DifficultyMode.medium;
+  final _sequence = <String>[].obs;
+  final _userSequence = <String>[].obs;
+  final _score = 0.obs;
+  final _isPlaying = false.obs;
+  final _sequenceColor = ''.obs;
+  final _isColorPressEnabled = false.obs;
+  final difficultyMode = DifficultyMode.medium.obs;
+
+  get sequence => _sequence;
+  get userSequence => _userSequence;
+  get score => _score;
+  get isPlaying => _isPlaying;
+  get sequenceColor => _sequenceColor;
+  get isColorPressEnabled => _isColorPressEnabled;
 
   void startGame() {
     sequence.clear();
@@ -41,20 +48,20 @@ class SimonGameController extends GetxController {
     isColorPressEnabled.value = false;
     await Future.delayed(
       Duration(
-        milliseconds: difficultyModeCheck(difficultyMode),
+        milliseconds: difficultyModeCheck(difficultyMode.value),
       ),
     );
     for (String color in sequence) {
       sequenceColor.value = color;
       await Future.delayed(
         Duration(
-          milliseconds: difficultyModeCheck(difficultyMode),
+          milliseconds: difficultyModeCheck(difficultyMode.value),
         ),
       );
       sequenceColor.value = "";
       await Future.delayed(
         Duration(
-          milliseconds: difficultyModeCheck(difficultyMode),
+          milliseconds: difficultyModeCheck(difficultyMode.value),
         ),
       );
       debugPrint('$sequence');
@@ -72,7 +79,7 @@ class SimonGameController extends GetxController {
   }
 
   void setDifficultyMode(DifficultyMode mode) {
-    difficultyMode = mode;
+    difficultyMode.value = mode;
     print(difficultyMode);
   }
 

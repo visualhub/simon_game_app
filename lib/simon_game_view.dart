@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:lights/custom_bottom_sheet.dart';
 import 'package:lights/simon_game_controller.dart';
 
 class SimonGame extends GetView<SimonGameController> {
@@ -99,7 +100,7 @@ class SimonGame extends GetView<SimonGameController> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Mode: ${controller.difficultyMode.name}',
+                'Mode: ${controller.difficultyMode.value.name}',
                 style: const TextStyle(fontSize: 12),
               ),
               const SizedBox(height: 20),
@@ -158,72 +159,8 @@ class SimonGame extends GetView<SimonGameController> {
     return showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
-        return Container(
-          decoration: const BoxDecoration(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-            color: Colors.white,
-          ),
-          alignment: Alignment.center,
-          padding: const EdgeInsets.all(20),
-          height: Get.height * 0.4,
-          width: Get.width,
-          child: Column(
-            children: [
-              const Text(
-                'Difficulty Levels',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              _customButton(
-                buttonText: 'Easy',
-                onPressed: () {
-                  controller.setDifficultyMode(DifficultyMode.easy);
-                },
-              ),
-              const Divider(),
-              _customButton(
-                buttonText: 'Medium',
-                onPressed: () {
-                  controller.setDifficultyMode(DifficultyMode.medium);
-                },
-              ),
-              const Divider(),
-              _customButton(
-                buttonText: 'Hard',
-                onPressed: () {
-                  controller.setDifficultyMode(DifficultyMode.hard);
-                },
-              ),
-            ],
-          ),
-        );
+        return const CustomBottomSheet();
       },
-    );
-  }
-
-  CupertinoButton _customButton({
-    required String buttonText,
-    required VoidCallback onPressed,
-  }) {
-    return CupertinoButton(
-      color: Colors.black.withOpacity(0.1),
-      onPressed: onPressed,
-      child: Container(
-        alignment: Alignment.center,
-        width: Get.width,
-        child: Text(
-          buttonText,
-          style: const TextStyle(color: Colors.black),
-        ),
-      ),
     );
   }
 }
